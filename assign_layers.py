@@ -53,4 +53,3 @@ def assign_layers(graph):
             leaf_list.append(node)
     pass_1(graph, root_list, 0)
     pass_2(graph, root_list)
-    

@@ -139,18 +139,24 @@ def get_positions(graph):
     sift_graph(graph)
     dictionary = {}
     for node in graph.nodes:
-        dictionary[node] = [graph.nodes[node]["hierarchy_depth"], graph.nodes[node]["layer_x"]]
+        dictionary[node] = (graph.nodes[node]["hierarchy_depth"]*1.5, graph.nodes[node]["layer_x"]*0.05)
     return dictionary
 
 graph = nx.DiGraph()
 
-graph.add_nodes_from(["A","B","C","D","E"])
-graph.add_edges_from([("A","B"),("B","C"),("B","D"),("E","C"),("C","D")])
+edges = [(1, 2), (1, 6), (2, 3), (2, 4), (2, 6),  
+         (3, 4), (3, 5), (4, 8), (4, 9), (6, 7)] 
+graph.add_edges_from(edges)
+
+fig, ax = plt.subplots()
+nx.draw(graph, with_labels=True, pos=None, ax=ax, connectionstyle='arc3, rad=0.1')
+plt.axis('on')
+plt.savefig("test1.png")
+plt.clf() 
+
 positions = get_positions(graph)
-print(positions)
 
-for node in graph.nodes:
-    print(node + "; (layer_x: " + str(graph.nodes[node]["layer_x"]) + ", depth: " + str(graph.nodes[node]["hierarchy_depth"]) + ")")
-
-# nx.draw(graph, with_labels=True, pos=positions)
-# plt.savefig("test2.png")
+fig, ax = plt.subplots()
+nx.draw(graph, with_labels=True, pos=positions, ax=ax, connectionstyle='arc3, rad=0.1')
+plt.axis('on')
+plt.savefig("test2.png")

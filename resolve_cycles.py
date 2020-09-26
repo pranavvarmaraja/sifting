@@ -19,7 +19,6 @@ def resolve_cycles(graph):
                 
                 graph.remove_edge(node1,node2)
 
-    return FAS
 
     
 #usage arrangement = linear_arrangement(graph)
