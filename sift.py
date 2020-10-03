@@ -133,23 +133,46 @@ def sift_graph(graph):
     assign_layer_x(graph, dictionary)
     for depth in dictionary.keys():
         sift_layer(graph,depth, dictionary)
+    remove_dummies(graph)
     
+
+# fix coordinates of nodes after dummy removal
+def remove_dummies(graph):
+    dummy_list = []
+    for node in graph.nodes:
+        if "dummy" in str(node):
+            dummy_list.append(node)
+            succit = graph.successors(node)
+            predit = graph.predecessors(node)
+            pred = next(predit)
+            succ = next(succit)
+            graph.remove_edge(pred,node)
+            graph.remove_edge(node,succ)
+            graph.add_edge(pred,succ)
+    for node in dummy_list:
+        graph.remove_node(node)
+            
+            
+        
+
 
 def get_positions(graph):
     sift_graph(graph)
     dictionary = {}
     for node in graph.nodes:
-        dictionary[node] = (graph.nodes[node]["hierarchy_depth"]*1.5, graph.nodes[node]["layer_x"]*0.05)
+        dictionary[node] = (graph.nodes[node]["hierarchy_depth"]*1.5, graph.nodes[node]["layer_x"]*0.5)
     return dictionary
 
 graph = nx.DiGraph()
 
 edges = [(1, 2), (1, 6), (2, 3), (2, 4), (2, 6),  
-         (3, 4), (3, 5), (4, 8), (4, 9), (6, 7)] 
+         (3, 4), (3, 5), (4, 8), (4, 9), (6, 7), (7,9), (5,2), (1,10)] 
 graph.add_edges_from(edges)
 
+# graph = nx.complete_graph(4, nx.DiGraph())
+
 fig, ax = plt.subplots()
-nx.draw(graph, with_labels=True, pos=None, ax=ax, connectionstyle='arc3, rad=0.1')
+nx.draw(graph, with_labels=True, pos=None, ax=ax, connectionstyle='arc3, rad=2')
 plt.axis('on')
 plt.savefig("test1.png")
 plt.clf() 

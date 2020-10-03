@@ -18,6 +18,7 @@ def resolve_cycles(graph):
                 FAS.append((node1,node2))
                 
                 graph.remove_edge(node1,node2)
+    return FAS
 
 
     
