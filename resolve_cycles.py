@@ -5,10 +5,13 @@ import networkx as nx
 #usage resolve_cycles(graph G)
 def resolve_cycles(graph):
 
+    #initialize empty list of feedback arc set
     FAS = []
-
+    #compute order of nodes which minimizes backwards edges
     arrangement = linear_arrangement(graph)
-
+    #remove all backwards nodes and add to feedback arc set (equivalent to make graph acyclic)
+    #because if backwards edges do not exist, no way for a cycle to exist where a node leads back
+    # to any predecessor
     for i in range(len(arrangement)):
         for j in range(0,i):
             node1 = arrangement[i]
@@ -48,6 +51,7 @@ def linear_arrangement(graph):
     sequence1 = []
     sequence2 = []
 
+    #implementation of greedyFAS (university of victoria, 2016), see wiki references for more details
     while(graph.order()>0):
 
         
@@ -106,13 +110,15 @@ def linear_arrangement(graph):
         
 
         
-
+    #sets the graph back to its original copy
     graph.update(g)
+    #returns the optimal linear arrangement of the given directional graph
     return list(sequence1 + sequence2)
         
 
 
 #usage x = sink_index(graph, node)
+#returns sink index of graph according to GreedyFAS algorithm
 def sink_index(graph, node):
 
     return graph.out_degree(node) - graph.in_degree(node)

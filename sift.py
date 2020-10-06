@@ -163,23 +163,21 @@ def get_positions(graph):
         dictionary[node] = (graph.nodes[node]["hierarchy_depth"]*1.5, graph.nodes[node]["layer_x"]*0.5)
     return dictionary
 
-graph = nx.DiGraph()
 
-edges = [(1, 2), (1, 6), (2, 3), (2, 4), (2, 6),  
-         (3, 4), (3, 5), (4, 8), (4, 9), (6, 7), (7,9), (5,2), (1,10)] 
-graph.add_edges_from(edges)
+#draw function and output to png file
+def draw(graph, filename, labels=False, positions=None, connection='arc3, rad=0.1'):
+    nx.draw(graph, with_labels=labels, pos=positions, connectionstyle=connection)
+    plt.savefig(filename)
 
-# graph = nx.complete_graph(4, nx.DiGraph())
 
-fig, ax = plt.subplots()
-nx.draw(graph, with_labels=True, pos=None, ax=ax, connectionstyle='arc3, rad=2')
-plt.axis('on')
-plt.savefig("test1.png")
-plt.clf() 
+# example usage on example graph
 
-positions = get_positions(graph)
+# graph = nx.DiGraph()
+# edges = [(1, 2), (1, 6), (2, 3), (2, 4), (2, 6),  
+#          (3, 4), (3, 5), (4, 8), (4, 9), (6, 7), (7,9), (5,2), (1,10)] 
+# graph.add_edges_from(edges)
 
-fig, ax = plt.subplots()
-nx.draw(graph, with_labels=True, pos=positions, ax=ax, connectionstyle='arc3, rad=0.1')
-plt.axis('on')
-plt.savefig("test2.png")
+
+# positions = get_positions(graph)
+
+# draw(graph=graph,labels=True, positions=positions, filename="test3.png")
