@@ -134,6 +134,8 @@ def sift_graph(graph):
     for depth in dictionary.keys():
         sift_layer(graph,depth, dictionary)
     remove_dummies(graph)
+    update_dictionary(graph,dictionary)
+    return dictionary
     
 
 # fix coordinates of nodes after dummy removal
@@ -154,30 +156,71 @@ def remove_dummies(graph):
             
             
         
+def update_dictionary(graph,dictionary):
+    for depth in dictionary:
+        for node in dictionary[depth]:
+            if "dummy" in str(node):
+                dictionary[depth].remove(node)
+    for depth in dictionary:
+        sort_layer_x(graph,dictionary[depth])
+        for i in range(len(dictionary[depth])):
+            graph.nodes[dictionary[depth][i]]["layer_x"] = i
+            graph.nodes[dictionary[depth][i]]["hierarchy_depth"] = depth
+
+
+def sort_layer_x(graph,node_list): 
+    if len(node_list) >1: 
+        mid = len(node_list)//2  
+        L = node_list[:mid]  
+        R = node_list[mid:] 
+  
+        sort_layer_x(graph,L) 
+        sort_layer_x(graph,R)  
+  
+        i = j = k = 0
+    
+        while i < len(L) and j < len(R): 
+            if graph.nodes[L[i]]["layer_x"] < graph.nodes[R[j]]["layer_x"]: 
+                node_list[k] = L[i] 
+                i+= 1
+            else: 
+                node_list[k] = R[j] 
+                j+= 1
+            k+= 1
+          
+        
+        while i < len(L): 
+            node_list[k] = L[i] 
+            i+= 1
+            k+= 1
+          
+        while j < len(R): 
+            node_list[k] = R[j] 
+            j+= 1
+            k+= 1
 
 
 def get_positions(graph):
-    sift_graph(graph)
+    bfs_dict = sift_graph(graph)
     dictionary = {}
     for node in graph.nodes:
-        dictionary[node] = (graph.nodes[node]["hierarchy_depth"]*1.5, graph.nodes[node]["layer_x"]*0.5)
+        dictionary[node] = (graph.nodes[node]["hierarchy_depth"], graph.nodes[node]["layer_x"])
     return dictionary
 
 
 #draw function and output to png file
-def draw(graph, filename, labels=False, positions=None, connection='arc3, rad=0.1'):
+def draw(graph, filename, labels=False, connection='arc3, rad=0.1'):
+    positions = get_positions(graph)
     nx.draw(graph, with_labels=labels, pos=positions, connectionstyle=connection)
     plt.savefig(filename)
 
 
 # example usage on example graph
 
-# graph = nx.DiGraph()
-# edges = [(1, 2), (1, 6), (2, 3), (2, 4), (2, 6),  
-#          (3, 4), (3, 5), (4, 8), (4, 9), (6, 7), (7,9), (5,2), (1,10)] 
-# graph.add_edges_from(edges)
+graph = nx.DiGraph()
+edges = [(1, 2), (1, 6), (2, 3), (2, 4), (2, 6),  
+         (3, 4), (3, 5), (4, 8), (4, 9), (6, 7), (7,9), (5,2), (1,10)] 
+graph.add_edges_from(edges)
 
 
-# positions = get_positions(graph)
-
-# draw(graph=graph,labels=True, positions=positions, filename="test3.png")
+draw(graph=graph,labels=True, filename="test3.png")
