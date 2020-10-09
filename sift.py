@@ -3,7 +3,6 @@ from assign_layers import assign_layers
 from resolve_cycles import resolve_cycles
 import copy
 from matplotlib import pyplot as plt
-import time
 
 def generate_node_dict(graph):
     dictionary = {}
@@ -201,32 +200,31 @@ def get_positions(graph):
     bfs_dict, FAS = sift_graph(graph)
     graph.add_edges_from(FAS)
     dictionary = {}
-    for node in graph.nodes:
-        dictionary[node] = (graph.nodes[node]["hierarchy_depth"]*10, graph.nodes[node]["layer_x"]*20)
+    for depth in bfs_dict:
+        layer = bfs_dict[depth]
+        if depth%2==0:
+            for i in range(len(layer)):
+                node = layer[i]
+                dictionary[node] = (graph.nodes[node]["hierarchy_depth"], 2*i)
+        else:
+            for i in range(len(layer)):
+                node = layer[i]
+                dictionary[node] = (graph.nodes[node]["hierarchy_depth"], 2*i+1)
     return dictionary
 
 
-# def get_positions(graph):
-#     bfs_dict = sift_graph(graph)
-#     dictionary = {}
-#     for depth in bfs_dict:
-#         layer = bfs_dict[layer]
-#         for i in range(len(layer)):
-#             if i==0:
-#                 dictionary[node] = (graph.nodes[node]["hierarchy_depth"], i)
-#             elif i==1:
-#                 dictionary[node] = 
 
 
 #draw function and output to png file
-def draw(graph, filename, labels=False, connection='arc3, rad=0.1'):
-    start_time = time.time()
+def draw_hierarchy(graph, filename, labels=False, connection='arc3, rad=0.1'):
     positions = get_positions(graph)
+    # plt.figure(figsize = (12,9))
+    ax = plt.gca()
+    ax.set_aspect(aspect = 1/4, anchor = 'SW')
+
     nx.draw(graph, with_labels=labels, pos=positions, connectionstyle=connection)
     plt.savefig(filename)
-    end_time = time.time()
-    return end_time-start_time
-
+    graph.clear()
 
 # example usage on example graph
 
@@ -236,7 +234,4 @@ def draw(graph, filename, labels=False, connection='arc3, rad=0.1'):
 # graph.add_edges_from(edges)
 
 graph = nx.gnm_random_graph(100, 150, directed=True)
-
-
-runtime = draw(graph=graph,labels=True, filename="test3.png")
-print(str(runtime) + "")
+draw_hierarchy(graph=graph,labels=True, filename="test3.png")

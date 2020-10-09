@@ -43,6 +43,8 @@ def pass_2(graph, node_list):
 
 
 def assign_layers(graph):
+    if type(graph)!=nx.DiGraph:
+        raise Exception("graph is not a digraph!")
     root_list = []
     leaf_list = []
     nodes = graph.nodes()

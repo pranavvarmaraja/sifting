@@ -4,6 +4,10 @@ import networkx as nx
 
 #usage resolve_cycles(graph G)
 def resolve_cycles(graph):
+    if type(graph)!=nx.DiGraph:
+        raise Exception("graph is not a digraph!")
+    elif graph.order==0:
+        raise Exception("graph is empty!")
 
     #initialize empty list of feedback arc set
     FAS = []
