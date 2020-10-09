@@ -3,6 +3,7 @@ from assign_layers import assign_layers
 from resolve_cycles import resolve_cycles
 import copy
 from matplotlib import pyplot as plt
+import time
 
 def generate_node_dict(graph):
     dictionary = {}
@@ -23,7 +24,7 @@ def assign_layer_x(graph, dictionary):
 
 def two_edges_cross(graph, edge1, edge2):
     if(graph.nodes[edge1[1]]["hierarchy_depth"]!=graph.nodes[edge2[1]]["hierarchy_depth"]):
-        raise Exception("hierarchy_depths are not adjacent for layers being compared")
+       pass # raise Exception("hierarchy_depths are not adjacent for layers being compared: " + str(edge1) + ", " + str(edge2))
     else:
         if(graph.nodes[edge2[1]]["layer_x"]>graph.nodes[edge1[1]]["layer_x"] and 
         graph.nodes[edge2[0]]["layer_x"] < graph.nodes[edge1[0]]["layer_x"]):
@@ -123,19 +124,6 @@ def swap_node_layer_x(node1, node2):
 def swap_list_values(index1,index2,arr):
     arr[index1],arr[index2] = arr[index2],arr[index1]
     
-
-
-
-def sift_graph(graph):
-    resolve_cycles(graph)
-    assign_layers(graph)
-    dictionary = generate_node_dict(graph)
-    assign_layer_x(graph, dictionary)
-    for depth in dictionary.keys():
-        sift_layer(graph,depth, dictionary)
-    remove_dummies(graph)
-    update_dictionary(graph,dictionary)
-    return dictionary
     
 
 # fix coordinates of nodes after dummy removal
@@ -158,9 +146,7 @@ def remove_dummies(graph):
         
 def update_dictionary(graph,dictionary):
     for depth in dictionary:
-        for node in dictionary[depth]:
-            if "dummy" in str(node):
-                dictionary[depth].remove(node)
+        dictionary[depth][:] = [node for node in dictionary[depth] if not("dummy" in str(node))]
     for depth in dictionary:
         sort_layer_x(graph,dictionary[depth])
         for i in range(len(dictionary[depth])):
@@ -200,27 +186,57 @@ def sort_layer_x(graph,node_list):
             k+= 1
 
 
+def sift_graph(graph):
+    FAS = resolve_cycles(graph)
+    assign_layers(graph)
+    dictionary = generate_node_dict(graph)
+    assign_layer_x(graph, dictionary)
+    for depth in dictionary.keys():
+        sift_layer(graph,depth, dictionary)
+    remove_dummies(graph)
+    update_dictionary(graph,dictionary)
+    return dictionary, FAS
+
 def get_positions(graph):
-    bfs_dict = sift_graph(graph)
+    bfs_dict, FAS = sift_graph(graph)
+    graph.add_edges_from(FAS)
     dictionary = {}
     for node in graph.nodes:
-        dictionary[node] = (graph.nodes[node]["hierarchy_depth"], graph.nodes[node]["layer_x"])
+        dictionary[node] = (graph.nodes[node]["hierarchy_depth"]*10, graph.nodes[node]["layer_x"]*20)
     return dictionary
+
+
+# def get_positions(graph):
+#     bfs_dict = sift_graph(graph)
+#     dictionary = {}
+#     for depth in bfs_dict:
+#         layer = bfs_dict[layer]
+#         for i in range(len(layer)):
+#             if i==0:
+#                 dictionary[node] = (graph.nodes[node]["hierarchy_depth"], i)
+#             elif i==1:
+#                 dictionary[node] = 
 
 
 #draw function and output to png file
 def draw(graph, filename, labels=False, connection='arc3, rad=0.1'):
+    start_time = time.time()
     positions = get_positions(graph)
     nx.draw(graph, with_labels=labels, pos=positions, connectionstyle=connection)
     plt.savefig(filename)
+    end_time = time.time()
+    return end_time-start_time
 
 
 # example usage on example graph
 
-graph = nx.DiGraph()
-edges = [(1, 2), (1, 6), (2, 3), (2, 4), (2, 6),  
-         (3, 4), (3, 5), (4, 8), (4, 9), (6, 7), (7,9), (5,2), (1,10)] 
-graph.add_edges_from(edges)
+# graph = nx.DiGraph()
+# edges = [(1, 2), (1, 6), (2, 3), (2, 4), (2, 6),  
+#          (3, 4), (3, 5), (4, 8), (4, 9), (6, 7), (7,9), (5,2), (1,10)] 
+# graph.add_edges_from(edges)
+
+graph = nx.gnm_random_graph(100, 150, directed=True)
 
 
-draw(graph=graph,labels=True, filename="test3.png")
+runtime = draw(graph=graph,labels=True, filename="test3.png")
+print(str(runtime) + "")
