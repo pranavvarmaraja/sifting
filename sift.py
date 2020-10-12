@@ -1,8 +1,8 @@
 import networkx as nx
 from assign_layers import assign_layers
 from resolve_cycles import resolve_cycles
-import copy
 from matplotlib import pyplot as plt
+from copy import deepcopy
 
 def generate_node_dict(graph):
     dictionary = {}
@@ -93,18 +93,18 @@ def sort_descending_in_degree(graph,node_list):
     
 
 def sift_layer(graph,depth, dictionary):
-    node_list = copy.deepcopy(dictionary[depth])
+    node_list = deepcopy(dictionary[depth])
     for node in dictionary[depth]:
         i = node_list.index(node)
-        swap_node_layer_x(node, node_list[0])
+        swap_node_layer_x(node, node_list[0], graph)
         swap_list_values(i,0,node_list)
         i = 0
-        curr_config = copy.deepcopy(node_list)
+        curr_config = deepcopy(node_list)
         min_crossings = total_crossings(graph,depth,dictionary)
         for j in range (1,len(node_list)):
             node2 = curr_config[j]
             cuv = c_uv(graph,node,node2)
-            swap_node_layer_x(node,node2)
+            swap_node_layer_x(node,node2, graph)
             swap_list_values(i,j,curr_config)
             i = j
             if min_crossings-cuv+c_uv(graph, node, node2) < min_crossings:
@@ -117,8 +117,10 @@ def sift_layer(graph,depth, dictionary):
     
 
 
-def swap_node_layer_x(node1, node2):
+def swap_node_layer_x(node1, node2, graph):
     graph.nodes[node1]["layer_x"], graph.nodes[node2]["layer_x"] = graph.nodes[node2]["layer_x"], graph.nodes[node1]["layer_x"]
+
+    return graph
 
 def swap_list_values(index1,index2,arr):
     arr[index1],arr[index2] = arr[index2],arr[index1]
@@ -126,7 +128,7 @@ def swap_list_values(index1,index2,arr):
     
 
 # fix coordinates of nodes after dummy removal
-def remove_dummies(graph):
+def remove_dummies(graph, dictionary):
     dummy_list = []
     for node in graph.nodes:
         if "dummy" in str(node):
@@ -140,12 +142,12 @@ def remove_dummies(graph):
             graph.add_edge(pred,succ)
     for node in dummy_list:
         graph.remove_node(node)
+    for depth in dictionary:
+        dictionary[depth][:] = [node for node in dictionary[depth] if not("dummy" in str(node))]
             
             
         
 def update_dictionary(graph,dictionary):
-    for depth in dictionary:
-        dictionary[depth][:] = [node for node in dictionary[depth] if not("dummy" in str(node))]
     for depth in dictionary:
         sort_layer_x(graph,dictionary[depth])
         for i in range(len(dictionary[depth])):
@@ -192,11 +194,11 @@ def sift_graph(graph):
     assign_layer_x(graph, dictionary)
     for depth in dictionary.keys():
         sift_layer(graph,depth, dictionary)
-    remove_dummies(graph)
+    remove_dummies(graph, dictionary)
     update_dictionary(graph,dictionary)
     return dictionary, FAS
 
-def get_positions(graph):
+def get_hierarchy_positions(graph):
     bfs_dict, FAS = sift_graph(graph)
     graph.add_edges_from(FAS)
     dictionary = {}
@@ -205,24 +207,25 @@ def get_positions(graph):
         if depth%2==0:
             for i in range(len(layer)):
                 node = layer[i]
-                dictionary[node] = (graph.nodes[node]["hierarchy_depth"], 2*i)
+                dictionary[node] = (float(graph.nodes[node]["hierarchy_depth"]), float(2*i))
         else:
             for i in range(len(layer)):
                 node = layer[i]
-                dictionary[node] = (graph.nodes[node]["hierarchy_depth"], 2*i+1)
-    return dictionary
+                dictionary[node] = (float(graph.nodes[node]["hierarchy_depth"]), float(2*i+1))
+    for node in dictionary:
+        dictionary[node] = (dictionary[node][0], dictionary[node][1])
+
+    return dictionary, bfs_dict
 
 
 
 
 #draw function and output to png file
-def draw_hierarchy(graph, filename, labels=False, connection='arc3, rad=0.1'):
-    positions = get_positions(graph)
-    # plt.figure(figsize = (12,9))
-    ax = plt.gca()
-    ax.set_aspect(aspect = 1/4, anchor = 'SW')
+def draw_hierarchy(graph, filename, labels=True, scale=1):
+    get_hierarchy_positions(graph)
+    positions = rescale_layout_dict(get_hierarchy_positions(graph), scale=4)
 
-    nx.draw(graph, with_labels=labels, pos=positions, connectionstyle=connection)
+    nx.draw(graph, with_labels=labels, pos=positions)
     plt.savefig(filename)
     graph.clear()
 
@@ -233,5 +236,7 @@ def draw_hierarchy(graph, filename, labels=False, connection='arc3, rad=0.1'):
 #          (3, 4), (3, 5), (4, 8), (4, 9), (6, 7), (7,9), (5,2), (1,10)] 
 # graph.add_edges_from(edges)
 
-graph = nx.gnm_random_graph(100, 150, directed=True)
-draw_hierarchy(graph=graph,labels=True, filename="test3.png")
+# graph = nx.gnm_random_graph(50, 100, directed=True)
+
+# runtime = draw_hierarchy(graph=graph,labels=True, filename="test3.png")
+# print(runtime)
