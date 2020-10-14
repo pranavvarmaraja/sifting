@@ -1,0 +1,16 @@
+strict digraph "" {
+	Serverless	[type="AWS::Serverless::*"];
+	"Serverless:Functions"	[type="AWS::Serverless::Function"];
+	Serverless -> "Serverless:Functions";
+	"Serverless:DynamoDB"	[type="AWS::DynamoDB::*"];
+	Serverless -> "Serverless:DynamoDB";
+	Parameters	[type="SG::Parameters::*"];
+	Logs	[type="AWS::Logs::*"];
+	Outputs	[type="SG::Outputs::*"];
+	"API Gateway"	[type="AWS::ApiGateway::*"];
+	"API Gateway:Rest Api"	[type="AWS::ApiGateway::RestApi"];
+	"API Gateway" -> "API Gateway:Rest Api";
+	"API Gateway:APIs"	[type="SG::Sub_Resources::API_Paths"];
+	"API Gateway" -> "API Gateway:APIs";
+	"Pseudo Parameters"	[type="SG::Pseudo_Parameters::*"];
+}

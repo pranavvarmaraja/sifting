@@ -1,0 +1,44 @@
+strict digraph "" {
+	node [label="\N"];
+	Node1	[
+		label="Node1 (1)",
+		type="AWS::Node",
+		];
+	Node2	[
+		label="Node2 (2)",
+		type="AWS::Node",
+		];
+	Node3	[
+		label="Node3 (3)",
+		type="AWS::Node",
+		];
+	Node4	[
+		label="Node4 (4)",
+		type="AWS::Node",
+		];
+	Node5	[
+		label="Node5 (5)",
+		type="AWS::Node",
+		];
+	Node6	[
+		label="Node6 (5)",
+		type="AWS::Node"
+		];
+	Node7	[
+		label="Node7 (2)",
+		type="AWS::Node",
+		];
+	Node8	[
+		label="Node8 (3)",
+		type="AWS::Node",
+		];
+	Node1 -> Node2;
+	Node1 -> Node7;
+	Node2 -> Node3;
+	Node3 -> Node4;
+	Node4 -> Node5;
+	Node4 -> Node6;
+	Node8 -> Node4;
+	Node8 -> Node6;
+}
+

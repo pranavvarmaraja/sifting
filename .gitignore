@@ -1,0 +1,8 @@
+node_modules
+__pycache__
+settings.json
+graphs/corner*
+graphs/template*
+# graphs/*.dot
+graphs/*.svg
+graphs/*AGRAPH.dot

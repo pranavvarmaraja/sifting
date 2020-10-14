@@ -1,0 +1,51 @@
+strict digraph "" {
+	node [label="\N"];
+	"Serverless:Functions"	[already_ranked=True,
+		hierarchy_depth=3,
+		label="Serverless:Functions (4)",
+		rank=4,
+		type="AWS::Serverless::Function"];
+	"Serverless:DynamoDB"	[already_ranked=True,
+		hierarchy_depth=4,
+		label="Serverless:DynamoDB (5)",
+		rank=5,
+		type="AWS::DynamoDB::*"];
+	"Serverless:Functions" -> "Serverless:DynamoDB";
+	Parameters	[already_ranked=True,
+		hierarchy_depth=4,
+		label="Parameters (6)",
+		rank=6,
+		type="SG::Parameters::*"];
+	"Serverless:Functions" -> Parameters;
+	Logs	[already_ranked=True,
+		hierarchy_depth=0,
+		label="Logs (1)",
+		rank=1,
+		type="AWS::Logs::*"];
+	Logs -> "Serverless:Functions";
+	Logs -> Parameters;
+	Outputs	[already_ranked=True,
+		hierarchy_depth=0,
+		label="Outputs (0)",
+		rank=0,
+		type="SG::Outputs::*"];
+	"API Gateway:Rest Api"	[already_ranked=True,
+		hierarchy_depth=1,
+		label="API Gateway:Rest Api (2)",
+		rank=2,
+		type="AWS::ApiGateway::RestApi"];
+	Outputs -> "API Gateway:Rest Api";
+	"Pseudo Parameters"	[already_ranked=True,
+		hierarchy_depth=1,
+		label="Pseudo Parameters (7)",
+		rank=7,
+		type="SG::Pseudo_Parameters::*"];
+	Outputs -> "Pseudo Parameters";
+	"API Gateway:APIs"	[already_ranked=True,
+		hierarchy_depth=2,
+		label="API Gateway:APIs (3)",
+		rank=3,
+		type="SG::Sub_Resources::API_Paths"];
+	"API Gateway:Rest Api" -> "API Gateway:APIs";
+	"API Gateway:APIs" -> "Serverless:Functions";
+}

@@ -1,7 +1,6 @@
 import networkx as nx
 from assign_layers import assign_layers
 from resolve_cycles import resolve_cycles
-from matplotlib import pyplot as plt
 from copy import deepcopy
 
 def generate_node_dict(graph):
@@ -221,13 +220,13 @@ def get_hierarchy_positions(graph):
 
 
 #draw function and output to png file
-def draw_hierarchy(graph, filename, labels=True, scale=1):
-    get_hierarchy_positions(graph)
-    positions = rescale_layout_dict(get_hierarchy_positions(graph), scale=4)
+# def draw_hierarchy(graph, filename, labels=True, scale=1):
+#     get_hierarchy_positions(graph)
+#     positions = nx.rescale_layout_dict(get_hierarchy_positions(graph), scale=4)
 
-    nx.draw(graph, with_labels=labels, pos=positions)
-    plt.savefig(filename)
-    graph.clear()
+#     nx.draw(graph, with_labels=labels, pos=positions)
+#     plt.savefig(filename)
+#     graph.clear()
 
 # example usage on example graph
 
