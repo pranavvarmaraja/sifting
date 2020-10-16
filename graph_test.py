@@ -77,56 +77,70 @@ def test_svg():
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # new_graph = nx.MultiDiGraph()
 
+    test_example = 2
+
     # Example #1:
     # -----------
-    # my_graph = read_dot("./graphs/subgraphs.dot")
-    my_graph = read_dot("./graphs/subgraph_hierarchy.dot")
+    if test_example == 1:
 
-    # 1) Positions provided by Sifter
-    pos = get_hierarchy_positions(my_graph)
-    positions = pos[0]
-    print(positions)
-    # Rendered positions:
-    # {'Serverless:Functions': (3.0, 1.0), 'Serverless:DynamoDB': (4.0, 0.0), 'Parameters': (4.0, 2.0), 'Logs': (0.0, 0.0), 'Outputs': (0.0, 2.0), 'Pseudo Parameters': (1.0, 1.0), 'API Gateway:Rest Api': (1.0, 3.0), 'API Gateway:APIs': (2.0, 0.0)}
+        my_graph = read_dot("./graphs/subgraphs.dot")
+        # my_graph = read_dot("./graphs/subgraph_hierarchy.dot")
 
-    # # 2) Expected layout (example 1: cf template):
-    # positions = {
-    #     'Pseudo Parameters': (1.0, 3.0),
-    #     'Logs': (2.0, 3.0),
-    #     'Parameters': (4.0, 3.0),
-    #     'Outputs': (0.0, 2.0),
-    #     'API Gateway:Rest Api': (1.0, 1.0),
-    #     'API Gateway:APIs': (2.0, 1.0),
-    #     'Serverless:Functions': (3.0, 1.0),
-    #     'Serverless:DynamoDB': (4.0, 1.0),
-    # }
+        # # 1) Positions provided by Sifter
+        # pos = get_hierarchy_positions(my_graph)
+        # positions = pos[0]
+        # print(positions)
+        # # Rendered positions:
+        # # {'Serverless:Functions': (3.0, 1.0), 'Serverless:DynamoDB': (4.0, 0.0), 'Parameters': (4.0, 2.0), 'Logs': (0.0, 0.0), 'Outputs': (0.0, 2.0), 'Pseudo Parameters': (1.0, 1.0), 'API Gateway:Rest Api': (1.0, 3.0), 'API Gateway:APIs': (2.0, 0.0)}
+
+        # 2) Expected layout (example 1: cf template):
+        # positions = {
+        #     'Pseudo Parameters': (1.0, 3.0),
+        #     'Logs': (2.0, 3.0),
+        #     'Parameters': (4.0, 3.0),
+        #     'Outputs': (0.0, 2.0),
+        #     'API Gateway:Rest Api': (1.0, 1.0),
+        #     'API Gateway:APIs': (2.0, 1.0),
+        #     'Serverless:Functions': (3.0, 1.0),
+        #     'Serverless:DynamoDB': (4.0, 1.0),
+        # }
 
 
     # Example #2:
     # -----------
-    # my_graph = read_dot("./graphs/graph_test.dot")
+    if test_example == 2:
 
-    # # 1) Positions provided by Sifter
-    # pos = get_hierarchy_positions(my_graph)
-    # positions = pos[0]
-    # print(positions)
-    # Rendered positions:
-    # {'Node8': (0.0, 0.0), 'Node1': (0.0, 2.0), 'Node7': (1.0, 1.0), 'Node2': (1.0, 3.0), 'Node3': (2.0, 0.0), 'Node4': (3.0, 1.0), 'Node5': (4.0, 0.0), 'Node6': (4.0, 2.0)}
+        # Build graph from DOT representation:
+        # my_graph = read_dot("./graphs/graph_test.dot")
 
-    # # 2) Expected layout:
-    # positions = {
-    #     # 'Node1': (0.0, 2.0),
-    #     'Node1': (0.0, 1.0),
-    #     # 'Node2': (1.0, 3.0),
-    #     'Node2': (1.0, 0.0),
-    #     'Node3': (2.0, 0.0),
-    #     'Node4': (3.0, 1.0),
-    #     'Node5': (4.0, 0.0),
-    #     'Node6': (4.0, 2.0),
-    #     # 'Node7': (1.0, 1.0),
-    #     'Node7': (1.0, 2.0),
-    #     'Node8': (2.0, 2.0),
-    # }
+        # Build graph manually:
+        my_graph = nx.DiGraph()
+        edges = [("Node1", "Node2"), ("Node2", "Node3"), ("Node3", "Node4"), ("Node4", "Node5"), ("Node4", "Node6"),
+        ("Node1", "Node7"), ("Node8", "Node4"), ("Node8", "Node6")]
+        my_graph.add_edges_from(edges)
+
+        # 1) Positions provided by Sifter
+        pos = get_hierarchy_positions(my_graph)
+        positions = pos[0]
+        print(positions)
+        # Rendered positions:
+        {'Node8': (0.0, 0.0), 'Node1': (0.0, 2.0), 'Node7': (1.0, 1.0), 'Node2': (1.0, 3.0), 'Node3': (2.0, 0.0), 'Node4': (3.0, 1.0), 'Node5': (4.0, 0.0), 'Node6': (4.0, 2.0)}
+
+        # # 2) Expected layout:
+        # positions = {
+        #     # 'Node1': (0.0, 2.0),
+        #     'Node1': (0.0, 1.0),
+        #     # 'Node2': (1.0, 3.0),
+        #     'Node2': (1.0, 0.0),
+        #     'Node3': (2.0, 0.0),
+        #     'Node4': (3.0, 1.0),
+        #     'Node5': (4.0, 0.0),
+        #     'Node6': (4.0, 2.0),
+        #     # 'Node7': (1.0, 1.0),
+        #     'Node7': (1.0, 2.0),
+        #     # 'Node8': (0.0, 0.0),
+        #     'Node8': (2.0, 2.0),
+        # }
 
     for node_id in list(my_graph.nodes(data=False)):
         if node_id in positions.keys():
