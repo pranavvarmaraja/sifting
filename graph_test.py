@@ -77,7 +77,7 @@ def test_svg():
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # new_graph = nx.MultiDiGraph()
 
-    test_example = 2
+    test_example = 1
 
     # Example #1:
     # -----------
@@ -94,16 +94,16 @@ def test_svg():
         # # {'Serverless:Functions': (3.0, 1.0), 'Serverless:DynamoDB': (4.0, 0.0), 'Parameters': (4.0, 2.0), 'Logs': (0.0, 0.0), 'Outputs': (0.0, 2.0), 'Pseudo Parameters': (1.0, 1.0), 'API Gateway:Rest Api': (1.0, 3.0), 'API Gateway:APIs': (2.0, 0.0)}
 
         # 2) Expected layout (example 1: cf template):
-        # positions = {
-        #     'Pseudo Parameters': (1.0, 3.0),
-        #     'Logs': (2.0, 3.0),
-        #     'Parameters': (4.0, 3.0),
-        #     'Outputs': (0.0, 2.0),
-        #     'API Gateway:Rest Api': (1.0, 1.0),
-        #     'API Gateway:APIs': (2.0, 1.0),
-        #     'Serverless:Functions': (3.0, 1.0),
-        #     'Serverless:DynamoDB': (4.0, 1.0),
-        # }
+        positions = {
+            'Pseudo Parameters': (1.0, 3.0),
+            'Logs': (2.0, 3.0),
+            'Parameters': (4.0, 3.0),
+            'Outputs': (0.0, 2.0),
+            'API Gateway:Rest Api': (1.0, 1.0),
+            'API Gateway:APIs': (2.0, 1.0),
+            'Serverless:Functions': (3.0, 1.0),
+            'Serverless:DynamoDB': (4.0, 1.0),
+        }
 
 
     # Example #2:
@@ -124,7 +124,7 @@ def test_svg():
         positions = pos[0]
         print(positions)
         # Rendered positions:
-        {'Node8': (0.0, 0.0), 'Node1': (0.0, 2.0), 'Node7': (1.0, 1.0), 'Node2': (1.0, 3.0), 'Node3': (2.0, 0.0), 'Node4': (3.0, 1.0), 'Node5': (4.0, 0.0), 'Node6': (4.0, 2.0)}
+        # {'Node8': (0.0, 0.0), 'Node1': (0.0, 2.0), 'Node7': (1.0, 1.0), 'Node2': (1.0, 3.0), 'Node3': (2.0, 0.0), 'Node4': (3.0, 1.0), 'Node5': (4.0, 0.0), 'Node6': (4.0, 2.0)}
 
         # # 2) Expected layout:
         # positions = {
@@ -149,7 +149,7 @@ def test_svg():
             print("Missing position for this node: {}".format(node_id))
 
     # Save created SVG to this file
-    svg_file_name = "./graphs/test_graph.svg"
+    svg_file_name = "./graphs/test_graph2.svg"
 
     # Draw and save the graph into an SVG image:
     svg_document = draw_svg(my_graph, svg_file_name)

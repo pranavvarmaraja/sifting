@@ -22,11 +22,11 @@ GRAPH_MARGIN = 4
 LABEL_MARGIN = (4,4) #4
 # Set scale on both axes (X,Y):
 # GRAPH_SCALE  = (160,60)
-GRAPH_SCALE  = (200,60)
-NODE_SEP = 100
+GRAPH_SCALE  = (200,40)
+NODE_SEP = 280
 
 SVG_WIDTH = 1650.00
-SVG_HEIGHT = 400.00
+SVG_HEIGHT = 320.00
 
 # SVG_BACKGROUND_COLOR = "#97a5c0"
 SVG_BACKGROUND_COLOR = "white"
@@ -377,10 +377,19 @@ def get_svg_edge(edge=SvgEdge()):
     s_shape = '<path fill="{}" stroke="{}" d="{}" />'.format(edgeFill, edgeStroke, d_path)
     # print("Edge shape: {}".format(s_shape))
 
+    # function of E = edge.sp and D = edge.ep)
+
+    # aPos = (,)
+    # bPos = (,)
+    # cPos = (,)
+
+    # a_shape = '<polygon points="{:.1f},{:.1f} {:.1f},{:.1f} {:.1f},{:.1f} {:.1f},{:.1f}" />'.format(aPos[0], aPos[1],bPos[0], bPos[1],cPos[0], cPos[1],aPos[0], aPos[1],)
+
     return '\n'.join([
             (TAB*2)+s_edge,
             (TAB*3)+s_title,
             (TAB*3)+s_shape,
+            # (TAB*3)+a_shape,
             (TAB*2)+e_edge
             ])
 
@@ -596,7 +605,10 @@ class SvgGraph:
                 #  +  +  +  +  +  +  +  +  +  +  +  +  +  +  +  +  +  +  +  +  +  +  +  +  +  +  +  +
                 pass
 
-    def _shift_position(self, nodes=None, cumul_shift=0, start='root'):
+        print ("Leaf nodes: {}".format(self.leaf_nodes))
+
+    # def _shift_position(self, nodes=None, cumul_shift=0, start='root'):
+    def _shift_position(self, nodes=None, start='root'):
 
         for g_node in nodes:
             if start == 'root':
@@ -621,19 +633,21 @@ class SvgGraph:
                 # h_space = abs(next_pos[0]-current_pos[0])
                 h_space = next_pos[0]-current_pos[0]
                 # used TB/BT directions:
-                # v_space = abs(next_pos[1]-current_pos[1])
-                v_space = next_pos[1]-current_pos[1]
+                v_space = abs(next_pos[1]-current_pos[1])
+                # v_space = next_pos[1]-current_pos[1]
 
-                incr_shift = 0
+                # incr_shift = 0
 
                 if self.dir == 'LR':
                     if  h_space < self.sep:
-                        if h_space < 0: h_space = 0
-                        v_shift = self.sep - h_space
-                        self.graph.nodes[next_node]['pos'] = "{},{}".format(next_pos[0] + cumul_shift + v_shift, next_pos[1])
+                        # if h_space < 0: h_space = 0
+                        # v_shift = self.sep - h_space
+                        # self.graph.nodes[next_node]['pos'] = "{},{}".format(next_pos[0] + v_shift, next_pos[1])
+                        self.graph.nodes[next_node]['pos'] = "{},{}".format(current_pos[0] + self.sep, next_pos[1])
                         print("Shifting position for this node: {}".format(next_node))
-                        incr_shift = v_shift
-                        self._shift_position(next_nodes, cumul_shift + incr_shift)
+                        # incr_shift = v_shift
+                        # self._shift_position(next_nodes, cumul_shift + incr_shift)
+                        self._shift_position(next_nodes)
 
         pass
 
@@ -650,11 +664,11 @@ class SvgGraph:
         
         self._scale_positions()
 
-        # # Pass 1: Root to leaf nodes
-        # self._get_root_nodes()
-        # self._shift_position(self.root_nodes, start='root')
+        # Pass 1: Root to leaf nodes
+        self._get_root_nodes()
+        self._shift_position(self.root_nodes, start='root')
 
-        # # Pass 2: Leaf to Root nodes
+        # # # Pass 2: Leaf to Root nodes
         # self._get_leaf_nodes()
         # self._shift_position(self.leaf_nodes, start='leaf')
 
