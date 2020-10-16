@@ -220,13 +220,13 @@ def get_hierarchy_positions(graph):
 
 
 #draw function and output to png file
-# def draw_hierarchy(graph, filename, labels=True, scale=1):
-#     get_hierarchy_positions(graph)
-#     positions = nx.rescale_layout_dict(get_hierarchy_positions(graph), scale=4)
+def draw_hierarchy(graph, filename, labels=True, scale=1):
+    from matplotlib import pyplot as plt
+    positions = get_hierarchy_positions(graph)[0]
 
-#     nx.draw(graph, with_labels=labels, pos=positions)
-#     plt.savefig(filename)
-#     graph.clear()
+    nx.draw(graph, pos=positions, with_labels=labels)
+    plt.savefig(filename)
+    graph.clear()
 
 # example usage on example graph
 
