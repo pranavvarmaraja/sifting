@@ -21,17 +21,15 @@ def assign_layer_x(graph, dictionary):
             graph.nodes[ele[1]]["layer_x"] = ele[0]
 
 def two_edges_cross(graph, edge1, edge2):
-    if(graph.nodes[edge1[1]]["hierarchy_depth"]!=graph.nodes[edge2[1]]["hierarchy_depth"]):
-       pass # raise Exception("hierarchy_depths are not adjacent for layers being compared: " + str(edge1) + ", " + str(edge2))
+  
+    if(graph.nodes[edge2[1]]["layer_x"]>graph.nodes[edge1[1]]["layer_x"] and 
+    graph.nodes[edge2[0]]["layer_x"] < graph.nodes[edge1[0]]["layer_x"]):
+        return True
+    elif(graph.nodes[edge2[1]]["layer_x"]<graph.nodes[edge1[1]]["layer_x"] and 
+    graph.nodes[edge2[0]]["layer_x"] > graph.nodes[edge1[0]]["layer_x"]) :    
+        return True
     else:
-        if(graph.nodes[edge2[1]]["layer_x"]>graph.nodes[edge1[1]]["layer_x"] and 
-        graph.nodes[edge2[0]]["layer_x"] < graph.nodes[edge1[0]]["layer_x"]):
-            return True
-        elif(graph.nodes[edge2[1]]["layer_x"]<graph.nodes[edge1[1]]["layer_x"] and 
-        graph.nodes[edge2[0]]["layer_x"] > graph.nodes[edge1[0]]["layer_x"]) :    
-            return True
-        else:
-            return False 
+        return False 
 
 def c_uv(graph, node1, node2):
     edge_list1 = graph.in_edges([node1])

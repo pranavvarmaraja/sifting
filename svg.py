@@ -35,6 +35,9 @@ SVG_BACKGROUND_COLOR = "white"
 SUPPORTED_NODE_SHAPES = ["ellipse", "box"]
 NODE_SHAPE = SUPPORTED_NODE_SHAPES[0]
 
+ARROW_HEIGHT = 10
+ARROW_WIDTH = 10
+
 
 
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
@@ -358,8 +361,8 @@ def get_arrow_pos(start, end):
 
     import numpy as np
     #constant size values of arrows (length of base, height)
-    base = 10
-    height = 10
+    base = ARROW_WIDTH
+    height = ARROW_WIDTH
 
 
     bPos = end

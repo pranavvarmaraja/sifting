@@ -49,7 +49,7 @@ def pass_2(graph):
                 successor_iterator = graph.successors(node)
                 minimum_depth = graph.nodes[next(successor_iterator)]["hierarchy_depth"]
             except:
-                pass
+                continue
             while True:
                 try:
                     successor = next(successor_iterator)
