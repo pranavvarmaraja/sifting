@@ -4,6 +4,14 @@ import networkx as nx
 
 #usage resolve_cycles(graph G)
 def resolve_cycles(graph):
+    """ computes the optimal linear arrangement of a graph using linear_arrangement
+        then removes all backwards edges, returns list of edges removed
+        Parameters:
+            graph (nx.Digraph): graph whose cycles are to be resolved
+        Return:
+            FAS (list of tuples i.e. edges): list of edges removed
+    """
+    #error handling
     if type(graph)!=nx.DiGraph:
         raise Exception("graph is not a digraph!")
     elif graph.order==0:
@@ -14,8 +22,6 @@ def resolve_cycles(graph):
     #compute order of nodes which minimizes backwards edges
     arrangement = linear_arrangement(graph)
     #remove all backwards nodes and add to feedback arc set (equivalent to make graph acyclic)
-    #because if backwards edges do not exist, no way for a cycle to exist where a node leads back
-    # to any predecessor
     for i in range(len(arrangement)):
         for j in range(0,i):
             node1 = arrangement[i]
@@ -31,6 +37,11 @@ def resolve_cycles(graph):
     
 #usage arrangement = linear_arrangement(graph)
 def linear_arrangement(graph):
+    """computes the optimal linear arrangement of a graph using GreedyFAS
+        http://www.vldb.org/pvldb/vol10/p133-simpson.pdf
+        Parameters:
+            graph (nx.Digraph): graph whose arrangement is to be computed
+    """
 
 
     # ensure that original graph remains unchanged

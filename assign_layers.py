@@ -97,6 +97,11 @@ def pass_3(graph, node_list):
 
 
 def assign_layers(graph):
+    """ assigns horizontal layers "hierarchy_depth" attribute to all nodes in a given graph, calls passes 
+        Parameters:
+            graph (nx.Digraph): graph whose nodes are assigned layers
+    """
+    #erropr handling
     if type(graph)!=nx.DiGraph:
         raise Exception("graph is not a digraph!")
     root_list = []
