@@ -122,7 +122,6 @@ def test_svg():
         # 1) Positions provided by Sifter
         pos = get_hierarchy_positions(my_graph)
         positions = pos[0]
-        print(positions)
         # Rendered positions:
         # {'Node8': (0.0, 0.0), 'Node1': (0.0, 2.0), 'Node7': (1.0, 1.0), 'Node2': (1.0, 3.0), 'Node3': (2.0, 0.0), 'Node4': (3.0, 1.0), 'Node5': (4.0, 0.0), 'Node6': (4.0, 2.0)}
 

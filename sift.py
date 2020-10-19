@@ -34,8 +34,8 @@ def two_edges_cross(graph, edge1, edge2):
             return False 
 
 def c_uv(graph, node1, node2):
-    edge_list1 = graph.out_edges([node1])
-    edge_list2 = graph.out_edges([node2])
+    edge_list1 = graph.in_edges([node1])
+    edge_list2 = graph.in_edges([node2])
     count = 0
     for edge1 in edge_list1:
         for edge2 in edge_list2:
@@ -235,7 +235,4 @@ def draw_hierarchy(graph, filename, labels=True, scale=1):
 #          (3, 4), (3, 5), (4, 8), (4, 9), (6, 7), (7,9), (5,2), (1,10)] 
 # graph.add_edges_from(edges)
 
-# graph = nx.gnm_random_graph(50, 100, directed=True)
-
-# runtime = draw_hierarchy(graph=graph,labels=True, filename="test3.png")
-# print(runtime)
+# draw_hierarchy(graph=graph,labels=True, filename="test3.png")
