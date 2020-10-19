@@ -351,6 +351,38 @@ def get_svg_nodes(graph):
     return s_nodes
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+# Get corner positions of arrow
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+def get_arrow_pos(start, end):
+
+    import numpy as np
+    #constant size values of arrows (length of base, height)
+    base = 10
+    height = 10
+
+
+    bPos = end
+    init_vector = np.asanyarray(np.subtract(end,start))
+
+    angle = np.angle(np.complex(init_vector[0],init_vector[1]))
+
+    height_vector = np.asanyarray([height*np.cos(angle),height*np.sin(angle)])
+    D = np.asanyarray(end)-height_vector
+    print(D)
+
+    a_vector = np.asanyarray([base/2*np.cos(angle+np.pi/2), base/2*np.sin(angle+np.pi/2)])
+
+    aPos = D + a_vector
+    cPos = D - a_vector
+    
+
+    return aPos,bPos,cPos
+
+
+    
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 # Generate SVG string for Edges: <g />
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
@@ -378,18 +410,16 @@ def get_svg_edge(edge=SvgEdge()):
     # print("Edge shape: {}".format(s_shape))
 
     # function of E = edge.sp and D = edge.ep)
+    aPos,bPos,cPos = get_arrow_pos(edge.sp, edge.ep)
 
-    # aPos = (,)
-    # bPos = (,)
-    # cPos = (,)
 
-    # a_shape = '<polygon points="{:.1f},{:.1f} {:.1f},{:.1f} {:.1f},{:.1f} {:.1f},{:.1f}" />'.format(aPos[0], aPos[1],bPos[0], bPos[1],cPos[0], cPos[1],aPos[0], aPos[1],)
+    a_shape = '<polygon points="{:.1f},{:.1f} {:.1f},{:.1f} {:.1f},{:.1f} {:.1f},{:.1f}" />'.format(aPos[0], aPos[1],bPos[0], bPos[1],cPos[0], cPos[1],aPos[0], aPos[1],)
 
     return '\n'.join([
             (TAB*2)+s_edge,
             (TAB*3)+s_title,
             (TAB*3)+s_shape,
-            # (TAB*3)+a_shape,
+            (TAB*3)+a_shape,
             (TAB*2)+e_edge
             ])
 
